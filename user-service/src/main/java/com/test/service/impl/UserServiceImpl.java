@@ -4,8 +4,6 @@ import com.test.entity.User;
 import com.test.mapper.UserMapper;
 import com.test.service.UserService;
 import jakarta.annotation.Resource;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
