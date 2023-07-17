@@ -1,11 +1,22 @@
 package com.test.controller;
 
+import com.test.entity.UserBorrowDetail;
 import com.test.mapper.BorrowMapper;
+import com.test.service.BorrowService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class BorrowController {
+
     @Resource
-    BorrowMapper mapper;
+    BorrowService service;
+
+    @RequestMapping("/borrow/{uid}")
+    UserBorrowDetail findUserBorrows(@PathVariable("uid") int uid){
+        return service.getUserBorrowDetailByUid(uid);
+    }
 }
