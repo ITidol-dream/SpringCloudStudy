@@ -1,5 +1,7 @@
 package com.test.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.test.entity.Book;
 import com.test.entity.Borrow;
 import com.test.entity.User;
@@ -14,24 +16,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class BorrowServiceImpl implements BorrowService {
+public class BorrowServiceImpl extends ServiceImpl<BorrowMapper,Borrow> implements BorrowService {
 
     @Resource
-    BorrowMapper mapper;
+    BorrowMapper borrowMapper;
+
+    @Resource
+    RestTemplate restTemplate;
 
     @Override
-    public UserBorrowDetail getUserBorrowDetailByUid(int uid) {
-        List<Borrow> borrow = mapper.getBorrowsByUid(uid);
-        RestTemplate template = new RestTemplate();
-        //这里通过调用getForObject来请求其他服务，并将结果自动进行封装
-        //获取User信息
-        User user = template.getForObject("http://localhost:8201/user/"+uid, User.class);
-        //获取每一本书的详细信息
-        List<Book> bookList = borrow
+    public UserBorrowDetail getUserBorrowDetailByUid(Integer uid) {
+        QueryWrapper<Borrow> wrapper = new QueryWrapper<>();
+        wrapper.eq("uid",uid);
+        List<Borrow> list = borrowMapper.selectList(wrapper);
+        User user = restTemplate.getForObject("http://userclient/user/find/"+uid, User.class);
+
+        List<Book>  list1 = list
                 .stream()
-                .map(b -> template.getForObject("http://localhost:8101/book/"+b.getBid(), Book.class))
-                .collect(Collectors.toList());
-        return new UserBorrowDetail(user, bookList);
+                .map(a -> restTemplate.getForObject("http://bookclient/book/find/"+a.getBid(),Book.class))
+                .toList();
+
+        return new UserBorrowDetail(user,list1);
+
+
+
+
+
 
     }
 }
