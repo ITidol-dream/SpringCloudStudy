@@ -12,6 +12,7 @@ import com.test.service.client.BookClient;
 import com.test.service.client.UserClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,9 +25,13 @@ public class BorrowServiceImpl extends ServiceImpl<BorrowMapper,Borrow> implemen
 
     @Autowired
     BorrowMapper borrowMapper;
-    @Autowired
+
+
+    @Resource
     BookClient bookClient;
-    @Autowired
+
+
+    @Resource
     UserClient userClient;
 
     @Override
