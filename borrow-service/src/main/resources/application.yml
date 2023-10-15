@@ -13,9 +13,12 @@ spring:
       #配置为检查数据库表结构，没有时会自动创建
       ddl-auto: update
   application:
-    name: borrowclient
+    name: borrowservice
 eureka:
   client:
     # 跟上面一样，需要指向Eureka服务端地址，这样才能进行注册
     service-url:
       defaultZone: http://eureka01:8801/eureka,http://eureka02:8802/eureka
+feign:
+  circuitbreaker:
+    enabled: true

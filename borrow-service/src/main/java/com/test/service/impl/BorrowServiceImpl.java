@@ -8,40 +8,40 @@ import com.test.entity.User;
 import com.test.entity.UserBorrowDetail;
 import com.test.mapper.BorrowMapper;
 import com.test.service.BorrowService;
-import jakarta.annotation.Resource;
+import com.test.service.client.BookClient;
+import com.test.service.client.UserClient;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class BorrowServiceImpl extends ServiceImpl<BorrowMapper,Borrow> implements BorrowService {
 
-    @Resource
+    @Autowired
     BorrowMapper borrowMapper;
-
-    @Resource
-    RestTemplate restTemplate;
+    @Autowired
+    BookClient bookClient;
+    @Autowired
+    UserClient userClient;
 
     @Override
     public UserBorrowDetail getUserBorrowDetailByUid(Integer uid) {
+        System.out.println("正常执行");
         QueryWrapper<Borrow> wrapper = new QueryWrapper<>();
         wrapper.eq("uid",uid);
         List<Borrow> list = borrowMapper.selectList(wrapper);
-        User user = restTemplate.getForObject("http://userclient/user/find/"+uid, User.class);
-
+        User user = userClient.getUserById(uid);
         List<Book>  list1 = list
                 .stream()
-                .map(a -> restTemplate.getForObject("http://bookclient/book/find/"+a.getBid(),Book.class))
+                .map(a -> bookClient.getBookById(a.getBid()))
                 .toList();
 
         return new UserBorrowDetail(user,list1);
-
-
-
-
-
 
     }
 }
