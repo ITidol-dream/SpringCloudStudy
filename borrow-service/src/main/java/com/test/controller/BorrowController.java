@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
 @RestController
@@ -17,8 +18,8 @@ public class BorrowController {
     @Autowired
     BorrowService borrowService;
     @GetMapping("/find/{uid}")
-    UserBorrowDetail getUserBorrowDetail(@PathVariable ("uid") Integer uid){
-
+    UserBorrowDetail getUserBorrowDetail(@PathVariable ("uid") Integer uid, HttpServletRequest request){
+        System.out.println(request.getHeader("test"));
         return  borrowService.getUserBorrowDetailByUid(uid);
     }
 }
