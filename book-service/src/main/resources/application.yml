@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/spring-cloud
     username: root
-    password: 123456
+    password: Root_123
   jpa:
     #开启SQL语句执行日志信息
     show-sql: true
